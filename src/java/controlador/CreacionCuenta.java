@@ -5,9 +5,7 @@
 package controlador;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.SQLException;
-import javax.mail.Session;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -129,40 +127,49 @@ public class CreacionCuenta extends HttpServlet {
                     + optionsRadios + "',DEFAULT);");
             conexion.desconectarBD();
             enviarCorreo(request, response);
-            response.sendRedirect("EntradaIH?correoEnviado=true");
+            session.setAttribute("correoEnviado", email);
+            response.sendRedirect("EntradaIH.jsp");
         } catch (ClassNotFoundException ex) {
-            response.sendRedirect("EntradaIH?errorControlador=true");
+            session.setAttribute("errorControlador", ex.getMessage());
+            response.sendRedirect("EntradaIH.jsp");
         } catch (SQLException ex) {
-            response.sendRedirect("EntradaIH?errorConexion=true");
+            session.setAttribute("errorConexion", ex.getMessage());
+            response.sendRedirect("EntradaIH.jsp");
         }
     }
 
     private void validaCorreo(HttpServletRequest request, HttpServletResponse response) throws IOException {
         email = (String) session.getAttribute("validaCorreo");
+        session.removeAttribute("validaCorreo");
         try {
             ConexionBD conexion = new ConexionBD("facebar", "postgres", "postgres");
             conexion.conectarBD();
-            conexion.actualizarBD("UPDATE usuarios SET status='V'"
+            conexion.actualizarBD("UPDATE usuarios SET status='A'"
                     + " WHERE correoElectronico ='"
                     + email + "';");
             conexion.desconectarBD();
-            response.sendRedirect("EntradaIH?bienvenido=true");
-        } catch (ClassNotFoundException ex) {
-            response.sendRedirect("EntradaIH?errorControlador=true");
+            session.setAttribute("bienvenido", email);
+            response.sendRedirect("EntradaIH.jsp");
+         } catch (ClassNotFoundException ex) {
+            session.setAttribute("errorControlador", ex.getMessage());
+            response.sendRedirect("EntradaIH.jsp");
         } catch (SQLException ex) {
-            response.sendRedirect("EntradaIH?errorConexion=true");
+            session.setAttribute("errorConexion", ex.getMessage());
+            response.sendRedirect("EntradaIH.jsp");
         }
     }
 
     private void enviarCorreo(HttpServletRequest request, HttpServletResponse response) {
+        initMail();
+        sendEmail();
     }
 
     private void initMail() {
-        properties.put("mail.smtp.host", "mail.gmail.com");
+        properties.put("mail.smtp.host", "smtp.gmail.com");
         properties.put("mail.smtp.starttls.enable", "true");
         properties.put("mail.smtp.port", 587);
         properties.put("mail.smtp.mail.sender", "cthulhucompany@gmail.com");
-        properties.put("mail.smtp.user", "cthulucompany");
+        properties.put("mail.smtp.user", "cthulhucompany@gmail.com");
         properties.put("mail.smtp.auth", "true");
 
         sessionMail = Session.getDefaultInstance(properties);
@@ -177,16 +184,14 @@ public class CreacionCuenta extends HttpServlet {
             MimeMessage message = new MimeMessage(sessionMail);
             message.setFrom(new InternetAddress((String) properties.get("mail.smtp.mail.sender")));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
-            message.setSubject("faceBar");
-            message.setText("");
+            message.setSubject("Cuenta de faceBar");
+            message.setText("http://localhost:8080/facebar2.0/EntradaIH.jsp?validaCorreo="+email);
             Transport t = sessionMail.getTransport("smtp");
-            t.connect((String) properties.get("mail.smtp.mail.sender"), "cthulucompany");
+            t.connect((String) properties.get("mail.smtp.user"), "delirable");
             t.sendMessage(message, message.getAllRecipients());
             t.close();
         } catch (MessagingException ex) {
             Logger.getLogger(CreacionCuenta.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-
     }
 }

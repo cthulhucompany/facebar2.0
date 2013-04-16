@@ -11,7 +11,7 @@ import java.sql.Statement;
  * @author Jose Cruz Galindo Martinez
  * @version 1.0
  */
-public class coneccionBD {
+public class ConexionBD {
   
   private String url;
   private String controlador;
@@ -27,7 +27,7 @@ public class coneccionBD {
    * @param contrasena La contrasena del usuario que accede a la base.
    * @throws ClassNotFoundException Si no encuentra el Driver adecuado.
    */
-  public coneccionBD(String base, 
+  public ConexionBD(String base, 
           String usuario, 
           String contrasena) throws ClassNotFoundException {
     this.controlador = "org.postgresql.Driver";
@@ -41,7 +41,7 @@ public class coneccionBD {
   // la conexion entre el manejador y la aplicacion.
   private void cargarDriver() throws ClassNotFoundException {
     Class.forName(controlador);
-    System.out.println("Se Cargo el driver exitosamente");
+    System.out.println("Se cargo el driver exitosamente");
   }
 
   /**

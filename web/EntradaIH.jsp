@@ -37,40 +37,41 @@
     </head>
 
     <body>
-
         <% if (request.getSession().getAttribute("correoEnviado") != null) {%>
         <script>
             alert("Se mandó un correo de verificación\n"
-                +"a la cuenta: "+
-            <%=(String) request.getSession().getAttribute("correoEnviado")%>); 
+                +"a la cuenta: <%=(String) request.getSession().getAttribute("correoEnviado")%>");
+            <%session.removeAttribute("correoEnviado");%>
         </script>
-        <% }%>
-        
+        <%}%>
+
         <% if (request.getSession().getAttribute("bienvenido") != null) {%>
         <script>
             alert("Se ha validado la cuenta vinculada\n"
-                +"al correo: "+
-            request.getSession().getAttribute("bienvenido"));
+                +"al correo: <%=(String) request.getSession().getAttribute("bienvenido")%>");
+            session.removeAttribute("bienvenido");
         </script>
         <%}%>
-        
-        <% if (request.getParameter("validaCorreo") != null) {
-        request.getSession().setAttribute("validaCorreo",
-                (String)request.getParameter("validaCorreo"));
-        response.sendRedirect("CreacionCuenta");
-        }%>
+
+        <% if (request.getParameter("validaCorreo") != null) {%>
+        <%request.getSession().setAttribute("validaCorreo",
+        (String) request.getParameter("validaCorreo"));%>
+        <%response.sendRedirect("CreacionCuenta");%>
+        <%}%>
 
         <% if (request.getSession().getAttribute("errorControlador") != null) {%>
         <script>
-            alert("Ocurrió el siguiente error con el controlador de la base de datos:\n"+
-            request.getSession().getAttribute("errorControlador"));
+            alert("Ocurrió el siguiente error con el controlador de la base de datos:\n"
+                +"<%=(String)request.getSession().getAttribute("errorControlador")%>");
+            <%session.removeAttribute("errorControlador");%>
         </script>
         <%}%>
 
         <% if (request.getSession().getAttribute("errorConexion") != null) {%>
         <script>
             alert("Ocurrió el siguiente error en la conexion a la base de datos:\n"+
-            request.getSession().getAttribute("errorConexion"));
+                "<%=(String)request.getSession().getAttribute("errorConexion")%>");
+            <%session.removeAttribute("errorConexion");%>
         </script>
         <%}%>
 

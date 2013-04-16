@@ -1,22 +1,22 @@
 <%-- 
     Document   : EntradaIH
     Created on : 15/04/2013, 05:08:35 PM
-    Author     : yovas2
+    Author     : yovas
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
     <head>
         <meta charset="utf-8">
-        <title>Logn In - Facebar</title>
+        <title>faceBar</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="">
         <meta name="author" content="stilearning">
 
         <!-- google font -->
         <link href="http://fonts.googleapis.com/css?family=Aclonica:regular" rel="stylesheet" type="text/css" />
-        
+
         <!-- styles -->
         <link href="css/bootstrap.css" rel="stylesheet">
         <link href="css/bootstrap-responsive.css" rel="stylesheet">
@@ -37,6 +37,43 @@
     </head>
 
     <body>
+
+        <% if (request.getSession().getAttribute("correoEnviado") != null) {%>
+        <script>
+            alert("Se mandó un correo de verificación\n"
+                +"a la cuenta: "+
+            <%=(String) request.getSession().getAttribute("correoEnviado")%>); 
+        </script>
+        <% }%>
+        
+        <% if (request.getSession().getAttribute("bienvenido") != null) {%>
+        <script>
+            alert("Se ha validado la cuenta vinculada\n"
+                +"al correo: "+
+            request.getSession().getAttribute("bienvenido"));
+        </script>
+        <%}%>
+        
+        <% if (request.getParameter("validaCorreo") != null) {
+        request.getSession().setAttribute("validaCorreo",
+                (String)request.getParameter("validaCorreo"));
+        response.sendRedirect("CreacionCuenta");
+        }%>
+
+        <% if (request.getSession().getAttribute("errorControlador") != null) {%>
+        <script>
+            alert("Ocurrió el siguiente error con el controlador de la base de datos:\n"+
+            request.getSession().getAttribute("errorControlador"));
+        </script>
+        <%}%>
+
+        <% if (request.getSession().getAttribute("errorConexion") != null) {%>
+        <script>
+            alert("Ocurrió el siguiente error en la conexion a la base de datos:\n"+
+            request.getSession().getAttribute("errorConexion"));
+        </script>
+        <%}%>
+
         <!-- section header -->
         <header class="header" data-spy="affix" data-offset-top="0">
             <!--nav bar helper-->
@@ -45,14 +82,14 @@
                     <!--panel site-name-->
                     <div class="span2">
                         <div class="panel-sitename">
-                            <h2><a href="index.html"><span class="color-teal">Face</span>Bar</a></h2>
+                            <h2><span class="color-teal">face</span>Bar</h2>
                         </div>
                     </div>
                     <!--/panel name-->
                 </div>
             </div><!--/nav bar helper-->
         </header>
-        
+
         <!-- section content -->
         <section class="section">
             <div class="container">
@@ -79,20 +116,20 @@
                                     </div>
                                     <div class="control-group">
                                         <div class="pull-right helper-font-32">
-                                           
+
                                         </div>
-                                        
+
                                     </div>
                                     <div class="form-actions">
                                         <input type="submit" class="btn btn-block btn-large btn-primary" value="Iniciar sesi&oacute;n" />
 
-					<p class="help-block muted helper-font-small"></p>
-                       
+                                        <p class="help-block muted helper-font-small"></p>
+
                                     </div>
                                 </form>
-<p><br><div class="control-group">
-                                        <label class="control-label">Instrucciones
-					<p>Si ya est&aacute;s registrado inicia sesi&oacute;n, si no crea una cuenta nueva</p></label></div></p>	
+                                <p><br><div class="control-group">
+                                    <label class="control-label">Instrucciones
+                                        <p>Si ya est&aacute;s registrado inicia sesi&oacute;n, si no crea una cuenta nueva</p></label></div></p>	
                             </div>
                         </div>
                     </div><!--/Sign In-->
@@ -103,7 +140,7 @@
                                 <span>Crear cuenta</span>
                             </div>
                             <div class="box-body bg-white">
-                                <form id="sign-up" method="post">
+                                <form id="sign-up" method="post" action="CreacionCuenta">
                                     <div class="control-group">
                                         <label class="control-label">Nombre</label>
                                         <div class="controls">
@@ -132,28 +169,28 @@
                                             <p class="help-block muted helper-font-small"></p>
                                         </div>
                                     </div>
-<div class="control-group">
+                                    <div class="control-group">
                                         <label class="control-label">Fecha de nacimiento</label>
                                         <div class="controls">
                                             <input type="text" class="input-block-level" data-validate="{required: true, date:true, messages:{required:'Por favor ingresa una fecha anterior a hoy', date:'Por favor ingresa una fecha válida anterior a hoy'}}" name="fechaNac" id="fechaNac" autocomplete="off" data-date-format="dd/mm/yyyy"/>
                                             <p class="help-block muted helper-font-small"><strong></p>
                                         </div>
                                     </div>
-                                   <div class="control-group">
-                                                            <label class="control-label">G&eacute;nero</label>
-                                                            <div class="controls">
-                                                                <label class="radio">
-                                                                    <input type="radio" data-form="uniform" name="optionsRadios" id="optionRadioMasculino" value="masculino" checked>
-                                                                    M&aacute;sculino     
-                                                                </label>
-                                                                <label class="radio">
-                                                                    <input type="radio" data-form="uniform" name="optionsRadios" id="optionRadioFemenino" value="femenino">
-                                                                    Femenino
-                                                                </label>
-								  <p class="help-block muted helper-font-small"></p>
-                                                            </div>
-							  <p class="help-block muted helper-font-small"></p>
-                                                        </div>
+                                    <div class="control-group">
+                                        <label class="control-label">G&eacute;nero</label>
+                                        <div class="controls">
+                                            <label class="radio">
+                                                <input type="radio" data-form="uniform" name="optionsRadios" id="optionRadioMasculino" value="M" checked>
+                                                M&aacute;sculino     
+                                            </label>
+                                            <label class="radio">
+                                                <input type="radio" data-form="uniform" name="optionsRadios" id="optionRadioFemenino" value="F"">
+                                                Femenino
+                                            </label>
+                                            <p class="help-block muted helper-font-small"></p>
+                                        </div>
+                                        <p class="help-block muted helper-font-small"></p>
+                                    </div>
                                     <div class="form-actions">
                                         <input type="submit" class="btn btn-block btn-large btn-success" value="Crear cuenta" />
                                     </div>
@@ -163,7 +200,7 @@
                     </div><!--/Sign Up-->
                 </div><!-- /row -->
             </div><!-- /container -->
-            
+
             <!-- modal recover -->
             <div id="modal-recover" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="modal-recoverLabel" aria-hidden="true">
                 <div class="modal-header">
@@ -193,11 +230,11 @@
         <script src="js/jquery.js"></script>
         <script src="js/bootstrap.js"></script>
         <script src="js/uniform/jquery.uniform.js"></script>
-	<script src="js/datepicker/bootstrap-datepicker.js"></script>
-        
+        <script src="js/datepicker/bootstrap-datepicker.js"></script>
+
         <script src="js/validate/jquery.metadata.js"></script>
         <script src="js/validate/jquery.validate.js"></script>
-        
+
         <script type="text/javascript">
             $(document).ready(function() {
                 // try your js
@@ -205,15 +242,15 @@
                 // uniform
                 $('[data-form=uniform]').uniform();
 
-		// datepicker
-		var nowTemp = new Date();
-        	var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+                // datepicker
+                var nowTemp = new Date();
+                var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(),0,0,0,0);
 
                 var fechaNac=$('#fechaNac').datepicker({
-          		onRender: function(date) {
-            		return date.valueOf() >= now.valueOf() ? 'disabled' : '';
-          		}
-        	});
+                    onRender: function(date) {
+                        return date.valueOf() >= now.valueOf() ? 'disabled' : '';
+                    }
+                });
 		
                 // validate
                 $('#sign-in').validate();

@@ -118,8 +118,9 @@ public class CreacionCuenta extends HttpServlet {
             ConexionBD conexion = new ConexionBD("facebar", "samurai", "");
             conexion.conectarBD();
             ResultSet consulta = conexion.consultarBD("SELECT * FROM usuarios WHERE correoelectronico='" + email + "';");
-            if (consulta != null) {
-                enviarCorreo(request, response,password);
+            if (consulta.next()) {
+                enviarCorreo(request, response,consulta.getString("contrasenia"
+                        ));
                 session.setAttribute("correoEnviado", email);
                 response.sendRedirect("EntradaIH.jsp");
             } else {

@@ -18,6 +18,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import modelo.Estados;
 
 /**
@@ -78,7 +79,8 @@ public class actualizacionEstado extends HttpServlet {
             // To Do Incorporarlo con la sesión
             Date date = new Date();
             estado.setFechacreacion(date);
-            
+        HttpSession ses = request.getSession();
+            String usuario_act = (String) ses.getAttribute("usuarioActual");
             estado.setPublicador("joe@joe.com");
             estado.setTexto(texto);
             estado.setEnlace(videoURL);
